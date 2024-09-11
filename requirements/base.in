@@ -3,3 +3,4 @@ graphene-django==3.2.2
 pip-tools==7.4.1
 gunicorn==23.0.0
 whitenoise==6.7.0
+psycopg==3.2.1

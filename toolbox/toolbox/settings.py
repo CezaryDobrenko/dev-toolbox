@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-006!a)y5iyijd_*w8w53zd^5on0zb4+7+cc9++r6p!n9ll9wsh"
+SECRET_KEY = os.environ.get("DJANGO_SECRET", "undefined")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -67,8 +67,12 @@ WSGI_APPLICATION = "toolbox.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.environ.get("DB_NAME", "undefined"),
+        "USER": os.environ.get("DB_USER", "undefined"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "undefined"),
+        "HOST": os.environ.get("DB_HOST", "undefined"),
+        "PORT": os.environ.get("DB_PORT", "undefined"),
     }
 }
 
