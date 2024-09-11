@@ -12,9 +12,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET", "undefined")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG_VALUE") == "TRUE"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "0.0.0.0",
+    "localhost",
+]
 
 
 # Application definition
@@ -110,6 +114,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+FORCE_SCRIPT_NAME = os.environ.get("FORCE_SCRIPT_NAME", "undefined")
 
 STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = os.environ.get("STATIC_URL", "static/")

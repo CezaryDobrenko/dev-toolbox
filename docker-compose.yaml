@@ -3,8 +3,24 @@ volumes:
 
 services:
 
+  reverse_proxy:
+    image: traefik:v2.9
+    restart: always
+    command:
+      - --serversTransport.insecureSkipVerify=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web-secure.address=:443
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   postgres_db:
     image: postgres:15
+    restart: always
     env_file: .env
     ports:
       - 5432:5432
@@ -13,8 +29,8 @@ services:
 
   toolbox:
     build: .
-    env_file: .env
     restart: always
+    env_file: .env
     entrypoint: ./entrypoint.sh
     ports:
       - "8000:8000"
@@ -22,3 +38,10 @@ services:
       - ./toolbox:/code
     depends_on:
       - postgres_db
+      - reverse_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.toolbox.rule=Host(`localhost`) && PathPrefix(`/apps/backend`)"
+      - "traefik.http.routers.toolbox.middlewares=toolbox-stripprefix"
+      - "traefik.http.middlewares.toolbox-stripprefix.stripprefix.prefixes=/apps/backend"
+      - "traefik.http.services.toolbox.loadbalancer.server.port=8000"
