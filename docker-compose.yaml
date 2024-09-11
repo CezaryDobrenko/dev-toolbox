@@ -1,0 +1,9 @@
+services:
+  toolbox:
+    build: .
+    restart: always
+    entrypoint: ./entrypoint.sh
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./toolbox:/code
