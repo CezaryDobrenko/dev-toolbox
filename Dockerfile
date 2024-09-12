@@ -14,7 +14,7 @@ COPY ./requirements/base.txt .
 RUN pip install -r base.txt
 
 # copy files
-COPY ./toolbox /code/
+COPY ./src /code/
 
 # Expose port
 EXPOSE 8000
