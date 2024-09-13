@@ -117,8 +117,8 @@ USE_TZ = True
 
 FORCE_SCRIPT_NAME = os.environ.get("FORCE_SCRIPT_NAME", "undefined")
 
-STATIC_ROOT = BASE_DIR / "static"
-STATIC_URL = os.environ.get("STATIC_URL", "static/")
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = os.environ.get("STATIC_URL", "staticfiles/")
 WHITENOISE_STATIC_PREFIX = os.environ.get("WHITENOISE_STATIC_PREFIX", STATIC_URL)
 
 STORAGES = {
@@ -137,4 +137,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Graphql
-GRAPHENE = {"SCHEMA": "toolbox.schema.schema"}
+GRAPHENE = {"SCHEMA": "toolbox.graphql.schema"}

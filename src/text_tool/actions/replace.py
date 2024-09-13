@@ -1,7 +1,8 @@
-from action import Action
+from toolbox.actions.action import Action
 
 
-class Replace(Action):
+class ReplaceAction(Action):
+    name = "Replace"
     old_text: str
     new_text: str
 

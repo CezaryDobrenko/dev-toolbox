@@ -1,9 +1,11 @@
 import base64
 
-from action import Action
+from toolbox.actions.action import Action
 
 
-class FromBase64(Action):
+class FromBase64Action(Action):
+    name = "FromBase64"
+
     def execute(self, text: str) -> str:
         return base64.b64decode(text).decode()
 
@@ -17,7 +19,9 @@ class FromBase64(Action):
         }
 
 
-class ToBase64(Action):
+class ToBase64Action(Action):
+    name = "ToBase64"
+
     def execute(self, text: str) -> str:
         text_bytes = text.encode("utf-8")
         return base64.b64encode(text_bytes).decode()

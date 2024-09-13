@@ -1,9 +1,10 @@
 import re
 
-from action import Action
+from toolbox.actions.action import Action
 
 
-class Censor(Action):
+class CensorAction(Action):
+    name = "Censor"
     censored_phrases: list[str]
     is_case_sensitive: bool
 

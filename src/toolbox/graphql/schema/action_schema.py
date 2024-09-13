@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import graphene
-from action import Action
-from text_tool.actions import TEXT_ACTIONS
+
+from toolbox.actions.action import Action
 
 
 class ActionArgumentNode(graphene.ObjectType):
@@ -35,14 +35,3 @@ class ActionSchemaNode(graphene.ObjectType):
             usage=action_dict.get("usage"),
             args=ActionArgumentNode.from_dict(action_dict.get("args")),
         )
-
-
-class Query(graphene.ObjectType):
-    hello = graphene.String(default_value="GraphQL ready!")
-    actions_schema = graphene.List(ActionSchemaNode)
-
-    def resolve_actions_schema(self, info, **kwargs):
-        return [ActionSchemaNode.from_action(action) for action in TEXT_ACTIONS]
-
-
-schema = graphene.Schema(query=Query)

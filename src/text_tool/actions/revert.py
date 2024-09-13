@@ -1,7 +1,9 @@
-from action import Action
+from toolbox.actions.action import Action
 
 
-class Revert(Action):
+class RevertAction(Action):
+    name = "Revert"
+
     def execute(self, text: str) -> str:
         return text[::-1]
 
