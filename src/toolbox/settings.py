@@ -29,8 +29,8 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
+    "whitenoise.runserver_nostatic",
     "graphene_django",
 ]
 
@@ -117,8 +117,8 @@ USE_TZ = True
 
 FORCE_SCRIPT_NAME = os.environ.get("FORCE_SCRIPT_NAME", "undefined")
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = os.environ.get("STATIC_URL", "staticfiles/")
+STATIC_ROOT = BASE_DIR / "static"
+STATIC_URL = os.environ.get("STATIC_URL", "static/")
 WHITENOISE_STATIC_PREFIX = os.environ.get("WHITENOISE_STATIC_PREFIX", STATIC_URL)
 
 STORAGES = {
