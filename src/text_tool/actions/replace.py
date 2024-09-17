@@ -18,6 +18,10 @@ class ReplaceAction(Action):
         return {
             "name": cls.__name__,
             "label": "replace_label",
+            "description": "replace_description",
             "usage": "text",
-            "args": {"old": "str", "new": "str"},
+            "args": {
+                "old": {"type": "str", "label": "old_label"},
+                "new": {"type": "str", "label": "new_label"},
+            },
         }

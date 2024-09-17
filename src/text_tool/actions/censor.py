@@ -28,8 +28,18 @@ class CensorAction(Action):
         return {
             "name": cls.__name__,
             "label": "censor_label",
+            "description": "censor_description",
             "usage": "text",
-            "args": {"censored_phrases": "list[str]", "is_case_sensitive": "bool"},
+            "args": {
+                "censored_phrases": {
+                    "type": "list[str]",
+                    "label": "censored_phrases_label",
+                },
+                "is_case_sensitive": {
+                    "type": "bool",
+                    "label": "is_case_sensitive_label",
+                },
+            },
         }
 
     def _compile_pattern(self, censored_phrase: str) -> re.Pattern:

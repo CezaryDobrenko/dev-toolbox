@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}{% endblock %}</title>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.3/Sortable.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+        
+        <style>
+            fieldset {
+                display: block;
+                margin-inline-start: 2px;
+                margin-inline-end: 2px;
+                border: groove 2px ThreeDFace;
+                padding-block-start: 0.35em;
+                padding-inline-end: 0.75em;
+                padding-block-end: 0.625em;
+                padding-inline-start: 0.75em;
+                min-inline-size: min-content;
+            }
+            legend {
+                width: unset;
+            }
+            
+            .action-text-legend{
+                margin: 0;
+                font-size: 15px;
+            }
+            .action-text-fieldset{
+                border: 1px solid black;
+            }
+            .action-text-input{
+                width: 100%;
+                height: 50px;
+            }
+            .action-text-checkbox{
+                height: 30px;
+                width: 30px;
+            }
+            .action-header{
+                border: 1px solid green;
+                width: 100%;
+            }
+            .action-header-text{
+                float: left;
+                width: 75%;
+                border: 1px solid blueviolet;
+            }
+            .action-header-delete{
+                margin-left: 10px;
+                float: right;
+                width: 50px;
+                height: 50px;
+                border: 1px solid blueviolet;
+            }
+            .action-header-close{
+                clear: both;
+            }
+            .action-text-span{
+                display:block;
+                clear:both;
+            }
+
+            .custom-container{
+                width: 100%;
+                border: 1px solid black;
+            }
+            .custom-container-textarea{
+                width: 100%;
+                height: 200px;
+                border: 1px solid red;
+            }
+            .custom-container-textarea-element{
+                width: 100%;
+                height: 200px;
+                border: 1px solid blue;
+            }
+        </style>
+        {% load static %}
+        {% block custom_styles %}{% endblock %}
+    </head>
+    <body>
+        main
+        <hr>
+            {% block content %}{% endblock %}
+        <hr>
+        end
+    </body>
+</html>

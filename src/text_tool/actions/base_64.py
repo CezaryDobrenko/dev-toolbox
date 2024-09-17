@@ -14,6 +14,7 @@ class FromBase64Action(Action):
         return {
             "name": cls.__name__,
             "label": "from_base64_label",
+            "description": "from_base64_description",
             "usage": "text",
             "args": {},
         }
@@ -31,6 +32,7 @@ class ToBase64Action(Action):
         return {
             "name": cls.__name__,
             "label": "to_base64_label",
+            "description": "to_base64_description",
             "usage": "text",
             "args": {},
         }

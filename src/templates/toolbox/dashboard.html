@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %} Toolbox {% endblock %}
+{% block content %} 
+<section class="custom-container">
+  <section class="custom-container-textarea">
+    <textarea class="custom-container-textarea-element" id="base-text"></textarea>
+  </section>
+  <section>
+    <select name="actions" id="action-select" onchange="actionHandler(this)">
+      <option value="default">select_action</option>
+      {% for action in actions %}
+        <option value="{{action}}">{{action}}</option>
+      {% endfor %}
+    </select>
+    <div id="example1" class="list-group col"></div>
+  </section>
+</section>
+
+<script>
+new Sortable(example1, {
+    animation: 150,
+    ghostClass: 'blue-background-class'
+});
+</script>
+
+<script>
+  var actions = {{actions | safe}};
+  var selected_actions = [];
+
+  function renderTextInputWithLegend(label){
+    text = document.createTextNode(label);
+    fieldset_element = document.createElement('fieldset');
+    legend_element = document.createElement("legend")
+    input_element = document.createElement("input");
+    fieldset_element.classList.add('action-text-fieldset');
+    legend_element.classList.add('action-text-legend');
+    input_element.classList.add('action-text-input');
+    input_element.type = "text";
+    legend_element.appendChild(text)
+    fieldset_element.appendChild(legend_element)
+    fieldset_element.appendChild(input_element)
+    return fieldset_element
+  }
+
+  function renderBoolInputWithLegend(label){
+    text = document.createTextNode(label);
+    fieldset_element = document.createElement('fieldset');
+    legend_element = document.createElement("legend")
+    input_element = document.createElement("input");
+    fieldset_element.classList.add('action-text-fieldset');
+    legend_element.classList.add('action-text-legend');
+    input_element.classList.add('action-text-checkbox');
+    input_element.type = "checkbox";
+    legend_element.appendChild(text)
+    fieldset_element.appendChild(legend_element)
+    fieldset_element.appendChild(input_element)
+    return fieldset_element
+  }
+
+  function renderArguments(args){
+    fields = []
+    for (arg in args) {
+      if(args[arg]["type"]=="str"){
+        fields.push(renderTextInputWithLegend(args[arg]["label"]))
+      }
+      if(args[arg]["type"]=="bool"){
+        fields.push(renderBoolInputWithLegend(args[arg]["label"]))
+      }
+      if(args[arg]["type"]=="list[str]"){
+        console.log("renderuję pole listę tekstową")
+      }
+    }
+    return fields
+  }
+
+  function renderHeader(name, description){
+    name_text = document.createTextNode(name + " - ");
+    description_text = document.createTextNode(description);
+    delete_text = document.createTextNode("delete");
+
+    header_element = document.createElement('div');
+    header_text_element = document.createElement('div');
+    header_text_element_span = document.createElement('span');
+    header_delete_element = document.createElement('div');
+    header_element_close = document.createElement('div');
+
+    header_element.classList.add('action-header');
+    header_text_element.classList.add('action-header-text');
+    header_text_element_span.classList.add('action-header-text-span');
+    header_delete_element.classList.add('action-header-delete');
+    header_element_close.classList.add('action-header-close');
+
+    header_delete_element.onclick = function() { removeAction(this); };
+    header_delete_element.appendChild(delete_text)
+
+    header_text_element_span.appendChild(name_text)
+    header_text_element.appendChild(header_text_element_span)
+    header_text_element.appendChild(description_text)
+    header_element.appendChild(header_text_element)
+    header_element.appendChild(header_delete_element)
+    header_element.appendChild(header_element_close)
+    return header_element
+  }
+
+  function renderAction(master_element, label, description, args){
+    master_element.appendChild(renderHeader(label, description))
+    for (renderedArgument of renderArguments(args)) {
+      master_element.appendChild(renderedArgument)
+    }
+    return master_element
+  }
+
+  function appendAction(label){
+    var ul = document.getElementById("example1");
+    let div = document.createElement('div');
+    div.classList.add('list-group-item');
+    ul.appendChild(
+      renderAction(
+        div, 
+        label, 
+        actions[label]["description"], 
+        actions[label]["args"]
+      )
+    )
+  }
+
+  function removeAction(selectedAction){
+    selectedAction.parentElement.parentElement.remove()
+  }
+
+  function actionHandler(selectObject) {
+    if(selectObject.value == "default"){return;}
+
+    selected_actions.push(selectObject.value);
+    appendAction(selectObject.value)
+  }
+
+</script>
+
+{% endblock %}

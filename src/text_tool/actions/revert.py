@@ -12,6 +12,7 @@ class RevertAction(Action):
         return {
             "name": cls.__name__,
             "label": "revert_label",
+            "description": "revert_description",
             "usage": "text",
             "args": {},
         }
