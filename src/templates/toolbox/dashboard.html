@@ -6,35 +6,84 @@
     <textarea class="custom-container-textarea-element" id="base-text"></textarea>
   </section>
   <section>
-    <select name="actions" id="action-select" onchange="actionHandler(this)">
+    <select 
+      name="actions" 
+      class="form-select" 
+      id="action-select" 
+      onclick="actionHandler(this)"
+    >
       <option value="default">select_action</option>
-      {% for action in actions %}
-        <option value="{{action}}">{{action}}</option>
+      {% for action, args in actions.items %}
+        <option value="{{action}}">{{ args.title }}</option>
       {% endfor %}
     </select>
-    <div id="example1" class="list-group col"></div>
-  </section>
+    <div id="selected_actions" class="list-group col"></div>
+    <button 
+      type="button" 
+      class="btn btn-primary btn-lg btn-block" 
+      onclick=processRequest()
+    >
+      execute_actions
+    </button>
+    <section class="custom-container-textarea">
+      <textarea class="custom-container-textarea-element" id="result-text"></textarea>
+    </section>
 </section>
 
+<form action="http://localhost/apps/backend" method="POST">
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+  <input type="submit">
+</form>
+
+
+
 <script>
-new Sortable(example1, {
+new Sortable(selected_actions, {
     animation: 150,
     ghostClass: 'blue-background-class'
 });
 </script>
 
 <script>
+  const csrf_token = "{{ csrf_token }}";
   var actions = {{actions | safe}};
-  var selected_actions = [];
 
-  function renderTextInputWithLegend(label){
-    text = document.createTextNode(label);
+  function renderTextListItem(arg, type){
+    delete_text = document.createTextNode("delete");
+
+    row_container_element = document.createElement('div');    
+    input_container_element = document.createElement('div');
+    delete_container_element = document.createElement('div');
+    input_element = document.createElement("input");
+
+    row_container_element.classList.add('row');
+    row_container_element.classList.add('custom-list-input-item')
+    input_container_element.classList.add('col-md-10');
+    delete_container_element.classList.add('col-md-1');
+    input_element.classList.add('action-text-input');
+    input_element.setAttribute('arg', arg);
+    input_element.setAttribute('arg-type', type);
+
+    input_element.type = "text";
+    delete_container_element.onclick = function() { removeListItem(this); };
+
+    delete_container_element.appendChild(delete_text)
+    input_container_element.appendChild(input_element)
+    row_container_element.appendChild(input_container_element)
+    row_container_element.appendChild(delete_container_element)
+    return row_container_element
+  }
+
+  function renderTextInputWithLegend(legend, arg, type){
+    text = document.createTextNode(legend);
     fieldset_element = document.createElement('fieldset');
     legend_element = document.createElement("legend")
     input_element = document.createElement("input");
     fieldset_element.classList.add('action-text-fieldset');
     legend_element.classList.add('action-text-legend');
     input_element.classList.add('action-text-input');
+    input_element.setAttribute('arg', arg);
+    input_element.setAttribute('arg-type', type);
     input_element.type = "text";
     legend_element.appendChild(text)
     fieldset_element.appendChild(legend_element)
@@ -42,8 +91,8 @@ new Sortable(example1, {
     return fieldset_element
   }
 
-  function renderBoolInputWithLegend(label){
-    text = document.createTextNode(label);
+  function renderBoolInputWithLegend(legend, arg, type){
+    text = document.createTextNode(legend);
     fieldset_element = document.createElement('fieldset');
     legend_element = document.createElement("legend")
     input_element = document.createElement("input");
@@ -51,31 +100,46 @@ new Sortable(example1, {
     legend_element.classList.add('action-text-legend');
     input_element.classList.add('action-text-checkbox');
     input_element.type = "checkbox";
+    input_element.setAttribute('arg', arg);
+    input_element.setAttribute('arg-type', type);
     legend_element.appendChild(text)
     fieldset_element.appendChild(legend_element)
     fieldset_element.appendChild(input_element)
     return fieldset_element
   }
 
-  function renderArguments(args){
-    fields = []
-    for (arg in args) {
-      if(args[arg]["type"]=="str"){
-        fields.push(renderTextInputWithLegend(args[arg]["label"]))
-      }
-      if(args[arg]["type"]=="bool"){
-        fields.push(renderBoolInputWithLegend(args[arg]["label"]))
-      }
-      if(args[arg]["type"]=="list[str]"){
-        console.log("renderuję pole listę tekstową")
-      }
-    }
-    return fields
+  function renderTextListInputWithLegend(legend, arg, type){
+    label_text = document.createTextNode(legend);
+    add_text = document.createTextNode("create_new_element");
+
+    add_container_element = document.createElement('div'); 
+    add_element_content = document.createElement('div'); 
+    fieldset_element = document.createElement('fieldset');
+    legend_element = document.createElement("legend")
+
+    add_container_element.classList.add('row');
+    add_container_element.classList.add('custom-list-input-item')
+    add_element_content.classList.add("custom-list-add")
+    legend_element.classList.add('action-text-legend');
+    fieldset_element.classList.add('action-text-fieldset');
+
+    add_container_element.onclick = function() { addListItem(this, arg); };
+
+    row_container_element = renderTextListItem(arg, type)
+
+    legend_element.appendChild(label_text)
+    add_element_content.appendChild(add_text)
+    add_container_element.appendChild(add_element_content)
+    fieldset_element.appendChild(legend_element)
+    fieldset_element.appendChild(row_container_element)
+    fieldset_element.appendChild(add_container_element)
+
+    return fieldset_element
   }
 
-  function renderHeader(name, description){
-    name_text = document.createTextNode(name + " - ");
-    description_text = document.createTextNode(description);
+  function renderHeader(title, description){
+    title_text = document.createTextNode(title);
+    description_text = document.createTextNode(" - " + description);
     delete_text = document.createTextNode("delete");
 
     header_element = document.createElement('div');
@@ -93,7 +157,7 @@ new Sortable(example1, {
     header_delete_element.onclick = function() { removeAction(this); };
     header_delete_element.appendChild(delete_text)
 
-    header_text_element_span.appendChild(name_text)
+    header_text_element_span.appendChild(title_text)
     header_text_element.appendChild(header_text_element_span)
     header_text_element.appendChild(description_text)
     header_element.appendChild(header_text_element)
@@ -102,8 +166,26 @@ new Sortable(example1, {
     return header_element
   }
 
-  function renderAction(master_element, label, description, args){
-    master_element.appendChild(renderHeader(label, description))
+  function renderArguments(args){
+    fields = []
+    for (arg in args) {
+      type = args[arg]["type"]
+      legend = args[arg]["legend"]
+      if(type=="str"){
+        fields.push(renderTextInputWithLegend(legend, arg, type))
+      }
+      if(type=="bool"){
+        fields.push(renderBoolInputWithLegend(legend, arg, type))
+      }
+      if(type=="list[str]"){
+        fields.push(renderTextListInputWithLegend(legend, arg, type))
+      }
+    }
+    return fields
+  }
+
+  function renderAction(master_element, title, description, args){
+    master_element.appendChild(renderHeader(title, description))
     for (renderedArgument of renderArguments(args)) {
       master_element.appendChild(renderedArgument)
     }
@@ -111,13 +193,14 @@ new Sortable(example1, {
   }
 
   function appendAction(label){
-    var ul = document.getElementById("example1");
+    var ul = document.getElementById("selected_actions");
     let div = document.createElement('div');
     div.classList.add('list-group-item');
+    div.setAttribute("action_name", actions[label]["name"])
     ul.appendChild(
       renderAction(
         div, 
-        label, 
+        actions[label]["title"], 
         actions[label]["description"], 
         actions[label]["args"]
       )
@@ -128,11 +211,78 @@ new Sortable(example1, {
     selectedAction.parentElement.parentElement.remove()
   }
 
+  function removeListItem(selectedItem){
+    selectedItem.parentElement.remove()
+  }
+
+  function addListItem(selectedItem, arg){
+    selectedItem.parentElement.insertBefore(renderTextListItem(arg), selectedItem)
+  }
+
   function actionHandler(selectObject) {
     if(selectObject.value == "default"){return;}
 
-    selected_actions.push(selectObject.value);
     appendAction(selectObject.value)
+  }
+
+  function getElementValue(element){
+    if(element.type == "checkbox"){
+      val = element.checked
+    } else{
+      val = element.value
+    }
+    return val
+  }
+
+  function getSelectedActions(){
+    selected_actions = []
+    action_container = document.getElementById("selected_actions")
+    for(action of action_container.childNodes){
+      action_name = action.getAttribute("action_name")
+      selected_action = {}
+      for(input_element of action.querySelectorAll("input, select, checkbox, textarea")){
+        arg_variable = input_element.getAttribute("arg")
+        arg_type = input_element.getAttribute("arg-type")
+        arg_value = getElementValue(input_element)
+        if(arg_variable in selected_action){
+          if(Array.isArray(selected_action[arg_variable])){
+            selected_action[arg_variable].push(arg_value)
+          } else{
+            tmp = selected_action[arg_variable]
+            selected_action[arg_variable] = [tmp, arg_value]
+          }
+        } else {
+          if(arg_type.includes("list")){
+            val = [arg_value]
+          } else {
+            val = arg_value
+          }
+          selected_action[arg_variable] = val
+        }
+      }
+      selected_actions.push({[action_name]: selected_action})
+    }
+    return selected_actions
+  }
+
+  function processRequest() {
+    selected_text = document.getElementById("base-text").value
+    selected_actions = JSON.stringify(getSelectedActions())
+
+    data = new FormData();
+    data.append('csrfmiddlewaretoken', csrf_token);
+    data.append('text', selected_text);
+    data.append('actions', selected_actions)
+
+    fetch("http://localhost/apps/backend", {
+      method: "POST", 
+      body: data, 
+      credentials: 'same-origin'
+    }).then(response => response.json())
+    .then(data => {
+        console.log(data)
+        document.getElementById("result-text").value = data["result"]
+    })
   }
 
 </script>

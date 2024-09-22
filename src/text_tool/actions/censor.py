@@ -4,7 +4,7 @@ from toolbox.actions.action import Action
 
 
 class CensorAction(Action):
-    name = "Censor"
+    name = "CensorAction"
     censored_phrases: list[str]
     is_case_sensitive: bool
 
@@ -19,25 +19,27 @@ class CensorAction(Action):
 
     def execute(self, text: str) -> str:
         for censored_phrase in self.censored_phrases:
-            pattern = self._compile_pattern(censored_phrase)
-            text = pattern.sub("[censored]", text)
+            if clean_censored_phrase := censored_phrase.strip():
+                pattern = self._compile_pattern(clean_censored_phrase)
+                text = pattern.sub("[censored]", text)
         return text
 
     @classmethod
     def to_dict(cls) -> dict:
         return {
+            "usage": "text",
             "name": cls.__name__,
             "label": "censor_label",
+            "title": "censor_title",
             "description": "censor_description",
-            "usage": "text",
             "args": {
                 "censored_phrases": {
                     "type": "list[str]",
-                    "label": "censored_phrases_label",
+                    "legend": "censored_phrases_legend",
                 },
                 "is_case_sensitive": {
                     "type": "bool",
-                    "label": "is_case_sensitive_label",
+                    "legend": "is_case_sensitive_legend",
                 },
             },
         }
