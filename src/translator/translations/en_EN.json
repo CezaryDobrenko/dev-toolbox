@@ -1,0 +1,23 @@
+{
+    "revert_title": "Revert action",
+    "revert_description": "The action allows you to reverse the order of characters in a sentence.",
+    "replace_title": "Replace action",
+    "replace_description": "The action allows you to replace the selected phrase in a sentence with another one.",
+    "old_legend": "Enter the value you want to replace.",
+    "new_legend": "Enter the value that will be used for replacement.",
+    "error_legend": "Should ignore potential errors when performing actions?",
+    "censor_title": "Censor action",
+    "censor_description": "The action allows you to censor the given values.",
+    "censored_phrases_legend": "Enter the values to be censored.",
+    "is_case_sensitive_legend": "Should it be case sensitive?",
+    "from_base64_title": "Convert action base64 -> text",
+    "from_base64_description": "The action allows conversion from base64 format to text",
+    "to_base64_title": "Convert action text -> base64",
+    "to_base64_description": "The action allows conversion from text to base64 format",
+    "create_new_element_label": "Add next element",
+    "delete_label": "Delete",
+    "execute_actions_label": "Execute actions",
+    "select_action_label": "Please select shares from the drop-down list:",
+    "base_text_placeholder_label": "Please select the text for further editing.",
+    "result_text_placeholder_label": "The result of performing the defined actions will appear here."
+}

@@ -1,6 +1,7 @@
 import re
 
 from toolbox.actions.action import Action
+from translator.translate import Translator
 
 
 class CensorAction(Action):
@@ -25,21 +26,22 @@ class CensorAction(Action):
         return text
 
     @classmethod
-    def to_dict(cls) -> dict:
+    def to_dict(cls, language: str = "pl_PL") -> dict:
+        t = Translator(language)
         return {
             "usage": "text",
             "name": cls.__name__,
             "label": "censor_label",
-            "title": "censor_title",
-            "description": "censor_description",
+            "title": t.translate("censor_title"),
+            "description": t.translate("censor_description"),
             "args": {
                 "censored_phrases": {
                     "type": "list[str]",
-                    "legend": "censored_phrases_legend",
+                    "legend": t.translate("censored_phrases_legend"),
                 },
                 "is_case_sensitive": {
                     "type": "bool",
-                    "legend": "is_case_sensitive_legend",
+                    "legend": t.translate("is_case_sensitive_legend"),
                 },
             },
         }

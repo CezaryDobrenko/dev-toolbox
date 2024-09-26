@@ -1,0 +1,23 @@
+{
+    "revert_title": "Akcja odwacająca",
+    "revert_description": "Akcja pozwala na odwrócenie kolenjności znaków w zdaniu.",
+    "replace_title": "Akcja zastępująca",
+    "replace_description": "Akcja pozwala na zastąpienie wybranej frazy w zdaniu na inną.",
+    "old_legend": "Podaj wartość którą chcesz zastąpić.",
+    "new_legend": "Podaj wartość która zostanie użyta do zastąpienia.",
+    "error_legend": "Czy zignorować potencjalne błędy przy wykonywaniu akcji?",
+    "censor_title": "Akcja cenzurująca",
+    "censor_description": "Akcja pozwala na ocenzurowanie podanych wartości.",
+    "censored_phrases_legend": "Podaj wartości do ocenzurowania.",
+    "is_case_sensitive_legend": "Czy uwzględniać wielkość liter?",
+    "from_base64_title": "Akcja konwertująca base64 na tekst",
+    "from_base64_description": "Akcja pozwala na konwersję z formatu base64 na tekst",
+    "to_base64_title": "Akcja konwertująca tekst -> base64",
+    "to_base64_description": "Akcja pozwala na konwersję z formatu tekst na base64",
+    "create_new_element_label": "Dodaj nastepny element",
+    "delete_label": "Usuń",
+    "execute_actions_label": "Wykonaj akcje",
+    "select_action_label": "Proszę wybrać akcje z rozwijalnej listy:",
+    "base_text_placeholder_label": "Proszę wybrać tekst do dalszej edycji.",
+    "result_text_placeholder_label": "Tutaj pojawi się wynik wykonania zdefiniowanych akcji."
+}

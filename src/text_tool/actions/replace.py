@@ -1,4 +1,5 @@
 from toolbox.actions.action import Action
+from translator.translate import Translator
 
 
 class ReplaceAction(Action):
@@ -16,16 +17,17 @@ class ReplaceAction(Action):
         return text.replace(self.old_text, self.new_text)
 
     @classmethod
-    def to_dict(cls) -> dict:
+    def to_dict(cls, language: str = "pl_PL") -> dict:
+        t = Translator(language)
         return {
             "usage": "text",
             "name": cls.__name__,
             "label": "replace_label",
-            "title": "replace_title",
-            "description": "replace_description",
+            "title": t.translate("replace_title"),
+            "description": t.translate("replace_description"),
             "args": {
-                "old_text": {"type": "str", "legend": "old_legend"},
-                "new_text": {"type": "str", "legend": "new_legend"},
-                "ignore_error": {"type": "bool", "legend": "error_legend"},
+                "old_text": {"type": "str", "legend": t.translate("old_legend")},
+                "new_text": {"type": "str", "legend": t.translate("new_legend")},
+                "ignore_error": {"type": "bool", "legend": t.translate("error_legend")},
             },
         }

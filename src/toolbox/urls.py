@@ -6,7 +6,7 @@ from graphene_django.views import GraphQLView
 from toolbox.views.dashboard import DashboardView
 
 urlpatterns = [
-    path("", DashboardView.as_view(), name="dashboard"),
+    path("<str:lang>", DashboardView.as_view(), name="dashboard"),
     path("admin/", admin.site.urls),
     path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
 ]

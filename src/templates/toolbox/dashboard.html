@@ -3,7 +3,11 @@
 {% block content %} 
 <section class="custom-container">
   <section class="custom-container-textarea">
-    <textarea class="custom-container-textarea-element" id="base-text"></textarea>
+    <textarea 
+      class="custom-container-textarea-element" 
+      id="base-text" 
+      placeholder="{{base_text_placeholder_label}}"
+    ></textarea>
   </section>
   <section>
     <select 
@@ -12,7 +16,7 @@
       id="action-select" 
       onclick="actionHandler(this)"
     >
-      <option value="default">select_action</option>
+      <option value="default">{{select_action_label}}</option>
       {% for action, args in actions.items %}
         <option value="{{action}}">{{ args.title }}</option>
       {% endfor %}
@@ -23,19 +27,16 @@
       class="btn btn-primary btn-lg btn-block" 
       onclick=processRequest()
     >
-      execute_actions
+      {{execute_actions_label}}
     </button>
     <section class="custom-container-textarea">
-      <textarea class="custom-container-textarea-element" id="result-text"></textarea>
+      <textarea 
+        class="custom-container-textarea-element" 
+        id="result-text" 
+        placeholder="{{result_text_placeholder_label}}"
+      ></textarea>
     </section>
 </section>
-
-<form action="http://localhost/apps/backend" method="POST">
-  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-  <input type="submit">
-</form>
-
-
 
 <script>
 new Sortable(selected_actions, {
@@ -46,10 +47,12 @@ new Sortable(selected_actions, {
 
 <script>
   const csrf_token = "{{ csrf_token }}";
+  const delete_label = "{{ delete_label }}";
+  const create_label = "{{ create_new_element_label }}"
   var actions = {{actions | safe}};
 
   function renderTextListItem(arg, type){
-    delete_text = document.createTextNode("delete");
+    delete_text = document.createTextNode(delete_label);
 
     row_container_element = document.createElement('div');    
     input_container_element = document.createElement('div');
@@ -110,7 +113,7 @@ new Sortable(selected_actions, {
 
   function renderTextListInputWithLegend(legend, arg, type){
     label_text = document.createTextNode(legend);
-    add_text = document.createTextNode("create_new_element");
+    add_text = document.createTextNode(create_label);
 
     add_container_element = document.createElement('div'); 
     add_element_content = document.createElement('div'); 
@@ -140,7 +143,7 @@ new Sortable(selected_actions, {
   function renderHeader(title, description){
     title_text = document.createTextNode(title);
     description_text = document.createTextNode(" - " + description);
-    delete_text = document.createTextNode("delete");
+    delete_text = document.createTextNode(delete_label);
 
     header_element = document.createElement('div');
     header_text_element = document.createElement('div');
@@ -223,6 +226,7 @@ new Sortable(selected_actions, {
     if(selectObject.value == "default"){return;}
 
     appendAction(selectObject.value)
+    selectObject.value = "default"
   }
 
   function getElementValue(element){

@@ -10,5 +10,5 @@ class Action(ABC):
 
     @classmethod
     @abstractmethod
-    def to_dict(cls) -> dict:
+    def to_dict(cls, language: str) -> dict:
         pass
